@@ -34,6 +34,8 @@ cam = cv2.VideoCapture(0)
 img_counter = 0
 sinais = cv2.imread("../dataset/alfabeto-libras.png")
 sinais = cv2.resize(sinais, (480,640))
+frase = cv2.imread("../dataset/fundo branco.png")
+frase = cv2.resize(frase, (900,100))
 img_text = ['','']
 while True:
     ret, frame = cam.read()
@@ -41,14 +43,14 @@ while True:
     frame = cv2.flip(frame,1)
     img = cv2.rectangle(frame, (1250,600),(850,200), (255,0,127), thickness=2, lineType=8, shift=0)
     cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (0, 0, 0)) # ESCREVE AS LETRAS
-    cv2.putText(frame, palavra, (100, 700), cv2.FONT_HERSHEY_TRIPLEX, 3, (255, 0, 0)) # escreve a palavra escrita
+    cv2.putText(frame, palavra, (100, 700), cv2.FONT_HERSHEY_TRIPLEX, 3, (0, 0, 255)) # escreve a palavra escrita
+    #cv2.putText(frase, palavra, (0, 70), cv2.FONT_HERSHEY_TRIPLEX, 3, (255, 0, 0)) # escreve a palavra escrita
     imcrop = img[102*2:298*2, 427*2:623*2]
 
 
     cv2.imshow("SINAIS", sinais)
-    #cv2.imshow("ROI", imcrop)
+    cv2.imshow("FRASE", frase)
     cv2.imshow("FRAME", frame)
-    #cv2.imshow("PREDICT", output)
     
     imggray = cv2.cvtColor(imcrop,cv2.COLOR_BGR2GRAY)
 
