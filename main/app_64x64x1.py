@@ -34,31 +34,33 @@ cam = cv2.VideoCapture(0)
 img_counter = 0
 sinais = cv2.imread("../dataset/alfabeto-libras.png")
 sinais = cv2.resize(sinais, (480,640))
-frase = cv2.imread("../dataset/fundo branco.png")
-frase = cv2.resize(frase, (900,100))
+
 img_text = ['','']
 while True:
+
+    frase = cv2.imread("../dataset/fundo branco.png")
+    frase = cv2.resize(frase, (900,100))
+
     ret, frame = cam.read()
     frame = cv2.flip(frame,1)
 
-    teste = str(img_text[0])
-    teste = teste[2:15]
-    print(teste)
-    print(type(teste))
+    verificador = str(img_text[0])
+    verificador = verificador[2:15]
+    print(verificador)
 
-    if "e" not in teste:
+    if "e" not in verificador:
         cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (0, 0, 0)) # ESCREVE AS LETRAS
         print("TEM")
     
     img = cv2.rectangle(frame, (1250,600),(850,200), (255,0,127), thickness=2, lineType=8, shift=0)
     #cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (0, 0, 0)) # ESCREVE AS LETRAS
     cv2.putText(frame, palavra, (100, 700), cv2.FONT_HERSHEY_TRIPLEX, 3, (0, 0, 255)) # escreve a palavra escrita
-    #cv2.putText(frase, palavra, (0, 70), cv2.FONT_HERSHEY_TRIPLEX, 3, (255, 0, 0)) # escreve a palavra escrita
+    cv2.putText(frase, palavra, (0, 70), cv2.FONT_HERSHEY_TRIPLEX, 3, (255, 0, 0)) # escreve a palavra escrita
     imcrop = img[102*2:298*2, 427*2:623*2]
 
 
     cv2.imshow("SINAIS", sinais) # mapa de sinais
-    #cv2.imshow("FRASE", frase) # Printa a frase escrita
+    cv2.imshow("FRASE", frase) # Printa a frase escrita
     cv2.imshow("FRAME", frame) # Imagem da camera com os objetos criados
     
     imggray = cv2.cvtColor(imcrop,cv2.COLOR_BGR2GRAY)
@@ -72,15 +74,15 @@ while True:
     print()
     
     #Guarda a letra informada na camera
-    if cv2.waitKey(2) == 32: # Tecla espaço
+    if cv2.waitKey(1) == 32: # Tecla espaço
         palavra += str(img_text[1])
     
     # Retira a ultima letra da palavra
-    if cv2.waitKey(2) == 97: # Tecla a
+    if cv2.waitKey(1) == 97: # Tecla a
         palavra = palavra[:-1]
 
     # Limpa a palavra escrita
-    if cv2.waitKey(2) == 98: # Tecla b
+    if cv2.waitKey(1) == 98: # Tecla b
         palavra = ''
 
     # Finaliza o sistema    
@@ -90,3 +92,4 @@ while True:
 
 cam.release()
 cv2.destroyAllWindows()
+
