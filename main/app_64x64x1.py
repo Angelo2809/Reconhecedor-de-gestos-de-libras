@@ -49,7 +49,7 @@ while True:
     print(verificador)
 
     if "e" not in verificador:
-        cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (0, 0, 0)) # ESCREVE AS LETRAS
+        cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (255, 0, 0)) # ESCREVE AS LETRAS
         print("TEM")
     
     img = cv2.rectangle(frame, (1250,600),(850,200), (255,0,127), thickness=2, lineType=8, shift=0)
