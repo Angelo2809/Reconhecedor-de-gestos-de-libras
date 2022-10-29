@@ -13,11 +13,11 @@ classes = 21
 letras = {'0' : 'A', '1' : 'B', '2' : 'C', '3': 'D', '4': 'E', '5':'F', '6':'G', '7': 'I', '8':'L', '9':'M', '10':'N', '11': 'O', '12':'P', '13':'Q', '14':'R', '15':'S', '16':'T', '17':'U', '18':'V', '19':'W','20':'Y'}
 palavra = ''
 
-def predictor():          
-       test_image = Image.open('../temp/img.png').convert('L')
-       test_image = image.img_to_array(test_image)
-       test_image = np.expand_dims(test_image, axis = 0)
-       result = classifier.predict(test_image)
+def previsao():          
+       imagemVerificar = Image.open('../temp/img.png').convert('L')
+       imagemVerificar = image.img_to_array(imagemVerificar)
+       imagemVerificar = np.expand_dims(imagemVerificar, axis = 0)
+       result = classifier.predict(imagemVerificar)
        maior, class_index = -1, -1
 
        for x in range(classes):      
@@ -63,16 +63,12 @@ while True:
     cv2.imshow("FRASE", frase) # Printa a frase escrita
     cv2.imshow("FRAME", frame) # Imagem da camera com os objetos criados
     
-    imggray = cv2.cvtColor(imcrop,cv2.COLOR_BGR2GRAY)
+    imgEscalaCinza = cv2.cvtColor(imcrop,cv2.COLOR_BGR2GRAY)
 
-    img_name = "../temp/img.png"
-    save_img = cv2.resize(imggray, (image_x, image_y))
-    cv2.imwrite(img_name, save_img)
-    img_text = predictor()
-    #print(palavra)
-    #print(img_text[0])
-    print()
-    
+    save_img = cv2.resize(imgEscalaCinza, (image_x, image_y))
+
+    cv2.imwrite("../temp/img.png", save_img)
+    img_text = previsao()    
     #Guarda a letra informada na camera
     if cv2.waitKey(1) == 32: # Tecla espaço
         palavra += str(img_text[1])

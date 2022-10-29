@@ -1,12 +1,16 @@
-from keras.utils import to_categorical, plot_model 
-from keras.optimizers import SGD, Adam
+from keras.utils.vis_utils import  plot_model
+from keras.optimizers import gradient_descent_v2
 from keras import backend
-from sklearn.metrics import classification_report
+#from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping
 from cnn import Convolucao
+from keras.models import Sequential
+from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.convolutional import Conv2D, MaxPooling2D
+from keras.layers import LeakyReLU
 
 import datetime
 import h5py
@@ -35,30 +39,19 @@ train_datagen = ImageDataGenerator(
 
 test_datagen = ImageDataGenerator(rescale=1./255, validation_split=0.25)
 
-training_set = train_datagen.flow_from_directory(
-        '../dataset/training',
-        target_size=(64, 64),
-        color_mode = 'rgb',
-        batch_size=32,
-        shuffle=False,
-        class_mode='categorical')
+training_set = train_datagen.flow_from_directory( '../dataset/training', target_size=(64, 64), color_mode = 'rgb', batch_size=32, shuffle=False, class_mode='categorical')
 
-test_set = test_datagen.flow_from_directory(
-        '../dataset/test',
-        target_size=(64, 64),
-        color_mode = 'rgb',
-        batch_size=32,
-        shuffle=False,
-        class_mode='categorical')
+test_set = test_datagen.flow_from_directory( '../dataset/test', target_size=(64, 64), color_mode = 'rgb', batch_size=32, shuffle=False, class_mode='categorical')
 
 # inicializar e otimizar modelo
 print("[INFO] Inicializando e otimizando a CNN...")
 start = time.time()
 
 early_stopping_monitor = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=15)
+sgd = gradient_descent_v2.SGD(learning_rate=0.01) 
 
-model = Convolucao.build(64, 64, 3, CLASS)
-model.compile(optimizer=SGD(0.01), loss="categorical_crossentropy",
+model = Convolucao.constructor(64, 64, 3, CLASS)
+model.compile(optimizer=sgd, loss="categorical_crossentropy",
               metrics=["accuracy"])
 
 # treinar a CNN
@@ -98,17 +91,17 @@ print('[INFO] Accuracy: %.2f%%' % (score[1]*100), '| Loss: %.5f' % (score[0]))
 
 print("[INFO] Sumarizando loss e accuracy para os datasets 'train' e 'test'")
 
-plt.style.use("ggplot")
-plt.figure()
-plt.plot(np.arange(0,EPOCHS), classifier.history["loss"], label="train_loss")
-plt.plot(np.arange(0,EPOCHS), classifier.history["val_loss"], label="val_loss")
-plt.plot(np.arange(0,EPOCHS), classifier.history["acc"], label="train_acc")
-plt.plot(np.arange(0,EPOCHS), classifier.history["val_acc"], label="val_acc")
-plt.title("Training Loss and Accuracy")
-plt.xlabel("Epoch #")
-plt.ylabel("Loss/Accuracy")
-plt.legend()
-plt.savefig('../models/graphics/'+FILE_NAME+file_date+'.png', bbox_inches='tight')
+# plt.style.use("ggplot")
+# plt.figure()
+# plt.plot(np.arange(0,EPOCHS), classifier.history["loss"], label="train_loss")
+# plt.plot(np.arange(0,EPOCHS), classifier.history["val_loss"], label="val_loss")
+# #plt.plot(np.arange(0,EPOCHS), classifier.history["acc"], label="train_acc")
+# #plt.plot(np.arange(0,EPOCHS), classifier.history["val_acc"], label="val_acc")
+# plt.title("Training Loss and Accuracy")
+# plt.xlabel("Epoch #")
+# plt.ylabel("Loss/Accuracy")
+# plt.legend()
+# plt.savefig('../models/graphics/'+FILE_NAME+file_date+'.png', bbox_inches='tight')
 
 print('[INFO] Gerando imagem do modelo de camadas da CNN')
 plot_model(model, to_file='../models/image/'+FILE_NAME+file_date+'.png', show_shapes = True)
