@@ -3,18 +3,19 @@ import numpy as np
 from keras.models import load_model
 from PIL import Image 
 from keras.preprocessing import image
-import time
+import datetime as dt
 
 image_x, image_y = 64,64
 
-classifier = load_model('../models/other_models/model_epoch_48_98.6_final.h5')
-
+#classifier = load_model('../models/other_models/model_epoch_48_98.6_final.h5')
+#classifier = load_model('../models/other_models/model-angelo.h5'
+classifier = load_model('../models/model-angelo_99.h5')
 classes = 21
 letras = {'0' : 'A', '1' : 'B', '2' : 'C', '3': 'D', '4': 'E', '5':'F', '6':'G', '7': 'I', '8':'L', '9':'M', '10':'N', '11': 'O', '12':'P', '13':'Q', '14':'R', '15':'S', '16':'T', '17':'U', '18':'V', '19':'W','20':'Y'}
 palavra = ''
 
 def previsao():          
-       imagemVerificar = Image.open('../temp/img.png').convert('L')
+       imagemVerificar = image.load_img('../temp/img.png', target_size=(64, 64))
        imagemVerificar = image.img_to_array(imagemVerificar)
        imagemVerificar = np.expand_dims(imagemVerificar, axis = 0)
        result = classifier.predict(imagemVerificar)
@@ -53,19 +54,20 @@ while True:
         print("TEM")
     
     img = cv2.rectangle(frame, (1250,600),(850,200), (255,0,127), thickness=2, lineType=8, shift=0)
-    #cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (0, 0, 0)) # ESCREVE AS LETRAS
-    cv2.putText(frame, palavra, (100, 700), cv2.FONT_HERSHEY_TRIPLEX, 3, (0, 0, 255)) # escreve a palavra escrita
+    cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (0, 0, 0)) # ESCREVE AS LETRAS
+    #cv2.putText(frame, palavra, (100, 700), cv2.FONT_HERSHEY_TRIPLEX, 3, (0, 0, 255)) # escreve a palavra escrita
     cv2.putText(frase, palavra, (0, 70), cv2.FONT_HERSHEY_TRIPLEX, 3, (255, 0, 0)) # escreve a palavra escrita
     imcrop = img[102*2:298*2, 427*2:623*2]
+    #imcrop = img[102:298, 427:623]
 
 
     cv2.imshow("SINAIS", sinais) # mapa de sinais
     cv2.imshow("FRASE", frase) # Printa a frase escrita
     cv2.imshow("FRAME", frame) # Imagem da camera com os objetos criados
     
-    imgEscalaCinza = cv2.cvtColor(imcrop,cv2.COLOR_BGR2GRAY)
+    #imgEscalaCinza = cv2.cvtColor(imcrop,cv2.COLOR_BGR2GRAY)
 
-    save_img = cv2.resize(imgEscalaCinza, (image_x, image_y))
+    save_img = cv2.resize(imcrop, (image_x, image_y))
 
     cv2.imwrite("../temp/img.png", save_img)
     img_text = previsao()    
@@ -83,6 +85,15 @@ while True:
 
     # Finaliza o sistema    
     if cv2.waitKey(2) == 27: # Tecla ESC
+        arq = open("logText.txt", "r")
+        content = arq.readlines()
+        content.append("-------------------------------------------------\n")
+        content.append("Moment: " + str(dt.datetime.now()) + "\n\n")
+        content.append(palavra)
+        content.append("\n-------------------------------------------------\n")
+        arq = open("logText.txt", "w")
+        arq.writelines(content)
+        arq.close()
         break
 
 

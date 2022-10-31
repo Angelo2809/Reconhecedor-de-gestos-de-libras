@@ -18,7 +18,7 @@ import time
 
 EPOCHS = 30
 CLASS = 21
-FILE_NAME = 'cnn_model_LIBRAS_'
+FILE_NAME = 'model_angelo_'
 
 def getDateStr():
         return str('{date:%Y%m%d_%H%M}').format(date=datetime.datetime.now())
@@ -37,7 +37,21 @@ train_datagen = ImageDataGenerator(
         horizontal_flip=True, 
         validation_split=0.25)
 
+# train_datagen = keras.utils.image_dataset_from_directory(
+#     directory='training_data/',
+#     labels='inferred',
+#     label_mode='categorical',
+#     batch_size=32,
+#     image_size=(256, 256))
+
 test_datagen = ImageDataGenerator(rescale=1./255, validation_split=0.25)
+
+# test_datagen = keras.utils.image_dataset_from_directory(
+#     directory='validation_data/',
+#     labels='inferred',
+#     label_mode='categorical',
+#     batch_size=32,
+#     image_size=(256, 256))
 
 training_set = train_datagen.flow_from_directory( '../dataset/training', target_size=(64, 64), color_mode = 'rgb', batch_size=32, shuffle=False, class_mode='categorical')
 
@@ -90,21 +104,6 @@ score = model.evaluate_generator(generator=test_set, steps=(test_set.n // test_s
 print('[INFO] Accuracy: %.2f%%' % (score[1]*100), '| Loss: %.5f' % (score[0]))
 
 print("[INFO] Sumarizando loss e accuracy para os datasets 'train' e 'test'")
-
-# plt.style.use("ggplot")
-# plt.figure()
-# plt.plot(np.arange(0,EPOCHS), classifier.history["loss"], label="train_loss")
-# plt.plot(np.arange(0,EPOCHS), classifier.history["val_loss"], label="val_loss")
-# #plt.plot(np.arange(0,EPOCHS), classifier.history["acc"], label="train_acc")
-# #plt.plot(np.arange(0,EPOCHS), classifier.history["val_acc"], label="val_acc")
-# plt.title("Training Loss and Accuracy")
-# plt.xlabel("Epoch #")
-# plt.ylabel("Loss/Accuracy")
-# plt.legend()
-# plt.savefig('../models/graphics/'+FILE_NAME+file_date+'.png', bbox_inches='tight')
-
-print('[INFO] Gerando imagem do modelo de camadas da CNN')
-plot_model(model, to_file='../models/image/'+FILE_NAME+file_date+'.png', show_shapes = True)
 
 print('\n[INFO] [FIM]: ' + getDateStr())
 print('\n\n')
