@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 from keras.models import load_model
-from PIL import Image 
 from keras.preprocessing import image
 import datetime as dt
 
@@ -38,8 +37,6 @@ def writeLog(word):
 
 image_x, image_y = 64,64
 
-#classifier = load_model('../models/other_models/model_epoch_48_98.6_final.h5')
-#classifier = load_model('../models/other_models/model-angelo.h5'
 classifier = load_model('../models/model-angelo_99.h5')
 classes = 21
 letters = {'0' : 'A', '1' : 'B', '2' : 'C', '3': 'D', '4': 'E', '5':'F', '6':'G', '7': 'I', '8':'L', '9':'M', '10':'N', '11': 'O', '12':'P', '13':'Q', '14':'R', '15':'S', '16':'T', '17':'U', '18':'V', '19':'W','20':'Y'}
@@ -68,15 +65,14 @@ while True:
 
     if "e" not in checker:
         cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (255, 0, 0)) # ESCREVE AS LETRAS
-        print("TEM")
     
     img = cv2.rectangle(frame, (1250,600),(850,200), (255,0,127), thickness=2, lineType=8, shift=0)
     cv2.putText(frame, str(img_text[1]), (100, 230), cv2.FONT_HERSHEY_TRIPLEX, 6, (0, 0, 0)) # ESCREVE AS LETRAS
-    #cv2.putText(frame, word, (100, 700), cv2.FONT_HERSHEY_TRIPLEX, 3, (0, 0, 255)) # escreve a word escrita
-    cv2.putText(frase, word, (0, 70), cv2.FONT_HERSHEY_TRIPLEX, 3, (255, 0, 0)) # escreve a word escrita
+    #cv2.putText(frame, word, (100, 700), cv2.FONT_HERSHEY_TRIPLEX, 3, (0, 0, 255)) # escreve a palavra escrita
+    cv2.putText(frase, word, (0, 70), cv2.FONT_HERSHEY_TRIPLEX, 3, (255, 0, 0)) # escreve a palavra escrita
     imcrop = img[102*2:298*2, 427*2:623*2]
 
-    cv2.imshow("SINAIS", gestures) # mapa de gestures
+    cv2.imshow("SINAIS", gestures) # mapa de gestos
     cv2.imshow("FRASE", frase) # Printa a frase escrita
     cv2.imshow("FRAME", frame) # Imagem da camera com os objetos criados
 

@@ -69,7 +69,7 @@ model.summary()
 
 history = model.fit(training_set, validation_data = test_set, epochs = epochs)
 
-#EPOCHS = len(classifier.history["loss"])
+EPOCHS = len(history.history["loss"])
 
 print("[INFO] Salvando modelo treinado ...")
 
